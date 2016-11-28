@@ -1,4 +1,4 @@
-FIX Protocol [![Build Status](https://secure.travis-ci.org/hotovson/fix-protocol.png?branch=master)](http://travis-ci.org/hotovson/fix-protocol) [![Coverage Status](https://img.shields.io/coveralls/Paymium/fix-protocol.svg)](https://coveralls.io/r/Paymium/fix-protocol?branch=master) [![Gem Version](https://badge.fury.io/rb/fix-protocol.svg)](http://badge.fury.io/rb/fix-protocol)
+FIX Protocol [![Build Status](https://secure.travis-ci.org/hotovson/fix-protocol.png?branch=master)](http://travis-ci.org/hotovson/fix-protocol) [![Coverage Status](https://coveralls.io/repos/github/hotovson/fix-protocol/badge.svg?branch=master)](https://coveralls.io/github/hotovson/fix-protocol?branch=master) [![Gem Version](https://badge.fury.io/rb/fix-protocol.svg)](http://badge.fury.io/rb/fix-protocol)
 =
 
 This FIX protocol wrapper enables one to easily parse and create messages complying with the FIX 4.4 specification.
