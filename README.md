@@ -18,6 +18,7 @@ msg.sender_comp_id  = 'MY_ID'
 msg.target_comp_id  = 'MY_COUNTERPARTY'
 msg.msg_seq_num     = 0
 msg.username        = 'MY_USERNAME'
+msg.password        = 'MY_PASSWORD'
 
 if msg.valid?
   puts msg.dump
@@ -26,7 +27,7 @@ else
 end
 ````
 
-Which would output the sample message : `8=FIX.4.4\x019=105\x0135=A\x0149=MY_ID\x0156=MY_COUNTERPARTY\x0134=0\x0152=20141021-10:33:15\x0198=0\x01108=30\x01553=MY_USERNAME\x01141=\x0110=176\x01`
+Which would output the sample message : `8=FIX.4.4\x019=103\x0135=A\x0149=MY_ID\x0156=MY_COUNTERPARTY\x0134=0\x0152=20161128-11:26:33\x0198=0\x01108=30\x01553=MY_USERNAME\x01554=MY_PASSWORD\x0110=059\x01`
 
 
 ## Message definition example
