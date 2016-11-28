@@ -5,14 +5,12 @@ require 'fix/protocol/messages/header'
 
 module Fix
   module Protocol
-
     #
     # Represents an instance of a FIX message
     #
     class Message < MessagePart
-
       # Default version for when we do not specify anything
-      DEFAULT_VERSION = 'FIX.4.4'
+      DEFAULT_VERSION = 'FIX.4.4'.freeze
       @@expected_version = DEFAULT_VERSION
 
       #
@@ -47,7 +45,7 @@ module Fix
           dumped = super
           header.body_length = dumped.gsub(/^8=[^\x01]+\x01/, '').gsub(/^9=[^\x01]+\x01/, '').length
           dumped = super
-          "#{dumped}10=#{'%03d' % (dumped.bytes.inject(&:+) % 256)}\x01"
+          "#{dumped}10=#{format('%03d', dumped.bytes.inject(&:+) % 256)}\x01"
         end
       end
 
@@ -66,13 +64,12 @@ module Fix
       # @return [Array<String>] The errors on the message header
       #
       def errors
-        if (version == @@expected_version)
+        if version == @@expected_version
           super
         else
           [super, "Unsupported version: <#{version}>, expected <#{@@expected_version}>"].flatten
         end
       end
-
     end
   end
 end

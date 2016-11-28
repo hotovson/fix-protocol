@@ -1,22 +1,19 @@
 module Fix
   module Protocol
-
     #
     # Defines helper methods to convert to and from FIX data types
     #
     module TypeConversions
-
       #
       # Parses a FIX-formatted timestamp into a Time instance, milliseconds are discarded
       #
       # @param str [String] A FIX-formatted timestamp
       # @return [Time] An UTC date and time
       #
+      TIMESTAMP_REGEX = /\A([0-9]{4})([0-9]{2})([0-9]{2})-([0-9]{2}):([0-9]{2}):([0-9]{2})(.[0-9]{3})?\Z/
       def parse_timestamp(str)
-        if m = str.match(/\A([0-9]{4})([0-9]{2})([0-9]{2})-([0-9]{2}):([0-9]{2}):([0-9]{2})(.[0-9]{3})?\Z/)
-          elts = m.to_a.map(&:to_i)
-          Time.new(elts[1], elts[2], elts[3], elts[4], elts[5], elts[6], 0)
-        end
+        m = str.match(TIMESTAMP_REGEX).to_a.map(&:to_i)
+        Time.new(m[1], m[2], m[3], m[4], m[5], m[6], 0) if m.any?
       end
 
       #
@@ -66,9 +63,8 @@ module Fix
       # @return [Boolean] +true+ if the string is 'Y', +false+ otherwise
       #
       def parse_yn_bool(str)
-        !!(str == 'Y')
+        str == 'Y'
       end
-
     end
   end
 end

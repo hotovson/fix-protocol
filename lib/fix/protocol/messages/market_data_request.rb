@@ -4,12 +4,10 @@ require 'fix/protocol/messages/instrument'
 module Fix
   module Protocol
     module Messages
-
       #
       # A FIX market data request message
       #
       class MarketDataRequest < Message
-
         #
         # The subscription type, see: http://www.onixs.biz/fix-dictionary/4.4/tagNum_263.html
         #
@@ -17,7 +15,7 @@ module Fix
           snapshot:     0,
           updates:      1,
           unsubscribe:  2
-        }
+        }.freeze
 
         #
         # Whether to return the full book or only the best bid/ask
@@ -25,7 +23,7 @@ module Fix
         MKT_DPTH_TYPES = {
           full: 0,
           top:  1
-        }
+        }.freeze
 
         #
         # Whether to send a full market depth on each update, we'll probably only support the incremental type
@@ -33,7 +31,7 @@ module Fix
         UPDATE_TYPES = {
           full:         0,
           incremental:  1
-        }
+        }.freeze
 
         unordered :body do
           field :md_req_id,                 tag: 262, required: true
@@ -42,7 +40,7 @@ module Fix
           field :md_update_type,            tag: 265, required: true, type: :integer, mapping: UPDATE_TYPES
 
           collection :md_entry_types, counter_tag: 267, klass: FP::Messages::MdEntryType
-          collection :instruments,    counter_tag: 146, klass: FP::Messages::Instrument  
+          collection :instruments,    counter_tag: 146, klass: FP::Messages::Instrument
         end
 
         #
@@ -51,15 +49,12 @@ module Fix
         def errors
           errs = []
 
-          errs << "MdEntryTypes can not be empty" if md_entry_types.empty?
-          errs << "Instruments can not be empty"  if instruments.empty?
+          errs << 'MdEntryTypes can not be empty' if md_entry_types.empty?
+          errs << 'Instruments can not be empty'  if instruments.empty?
 
           [super, errs].flatten
         end
-
       end
     end
   end
 end
-
-

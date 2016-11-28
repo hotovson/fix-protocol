@@ -2,19 +2,20 @@ require 'fix/protocol/type_conversions'
 
 module Fix
   module Protocol
-
     #
     # A FIX message field
     #
     class Field
-
       include TypeConversions
 
-      @@attrs = [:tag, :name, :default, :type, :required, :parse_failure, :mapping]
-      @@attrs.each { |attr| attr_accessor(attr) }
+      def self.attrs
+        [:tag, :name, :default, :type, :required, :parse_failure, :mapping]
+      end
+
+      attrs.each { |attr| attr_accessor(attr) }
 
       def initialize(node)
-        @@attrs.each { |attr| node[attr] && send("#{attr}=", node[attr]) }
+        self.class.attrs.each { |attr| node[attr] && send("#{attr}=", node[attr]) }
         self.value ||= (default.is_a?(Proc) ? default.call(self) : default)
       end
 
@@ -45,8 +46,9 @@ module Fix
       # @return [String] The same string with the field stripped off
       #
       def parse(str)
-        if str.match(/^#{tag}\=([^\x01]+)\x01/)
-          @value = $1
+        m = str.match(/^#{tag}\=([^\x01]+)\x01/).to_a
+        if m.any?
+          @value = m[1]
           str.gsub(/^[^\x01]+\x01/, '')
         else
           str
@@ -90,15 +92,13 @@ module Fix
         @value = v
       end
 
-      # 
+      #
       # Returns the errors for this field, if any
       #
       # @return [Array] The errors for this field
       #
       def errors
-        if required && !@value
-          "Missing value for <#{name}> field"
-        end
+        "Missing value for <#{name}> field" if required && !@value
       end
 
       #
@@ -111,7 +111,7 @@ module Fix
       def from_type(obj)
         if !obj.nil? && type && !mapping
           send("dump_#{type}", obj)
-        elsif !obj.nil? && mapping && mapping.has_key?(obj)
+        elsif !obj.nil? && mapping && mapping.key?(obj)
           mapping[obj]
         else
           obj
@@ -122,18 +122,17 @@ module Fix
       # Maps a string to an object or a mapped symbol
       #
       # @param str [String] The string to cast or map
-      # @return [Object] An object of the defined type or a mapped symbol
+      # @return [Object] An object of the defined type or a mapped symbol
       #
       def to_type(str)
         if str && type && !mapping
           send("parse_#{type}", str)
         elsif str && mapping && mapping.values.map(&:to_s).include?(str)
-          mapping.find { |k,v| v.to_s == str.to_s }[0]
+          mapping.find { |_, v| v.to_s == str.to_s }[0]
         else
           str
         end
       end
-
     end
   end
 end

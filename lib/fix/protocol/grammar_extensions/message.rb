@@ -1,16 +1,13 @@
 module Fix
-
   #
   # Namespace for Treetop grammar extensions
   #
   module GrammarExtensions
-
     #
-    # Extends the message component to return the header, body, 
+    # Extends the message component to return the header, body,
     # message type, and checksum from an AST
     #
     module Message
-
       #
       # Returns the FIX message header as a fields array
       #
@@ -22,11 +19,11 @@ module Fix
           last_fields = hdr.pop
 
           @header = hdr.map do |e|
-            [ e.elements[0].text_value.to_i, e.elements[2].text_value ]
+            [e.elements[0].text_value.to_i, e.elements[2].text_value]
           end
 
           last_fields.elements.inject(@header) do |h, e|
-            h << [ e.elements[0].text_value.to_i, e.elements[2].text_value ]
+            h << [e.elements[0].text_value.to_i, e.elements[2].text_value]
           end
         end
 
@@ -40,7 +37,7 @@ module Fix
       #
       def body
         @fields ||= elements[1].elements.map do |e|
-          [ e.elements[0].text_value.to_i, e.elements[2].text_value ]
+          [e.elements[0].text_value.to_i, e.elements[2].text_value]
         end
       end
 

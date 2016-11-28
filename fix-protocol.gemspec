@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
 require 'fix/protocol/version'
 
@@ -16,11 +16,11 @@ Gem::Specification.new do |s|
   This FIX protocol wrapper enables one to easily parse and create
   messages complying with the FIX 4.4 specification. It includes definitions
   for admin messages (logon, heartbeat, resend request, test request), for
-  some market data messages (market data request, market data snapshot, and 
+  some market data messages (market data request, market data snapshot, and
   market data incremental refresh) as well as the ability to easily define other ones.
   EOS
 
-  s.licenses    = ['MIT']
+  s.licenses = ['MIT']
 
   s.required_rubygems_version = '>= 1.3.6'
 

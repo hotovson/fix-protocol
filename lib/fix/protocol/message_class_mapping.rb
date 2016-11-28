@@ -2,12 +2,10 @@ require 'fix/protocol/messages'
 
 module Fix
   module Protocol
-    
     #
     # Maps the FIX message type codes to message classes
     #
     module MessageClassMapping
-
       # The actual code <-> class mapping
       MAPPING = {
         '0' => :heartbeat,
@@ -21,16 +19,16 @@ module Fix
         'W' => :market_data_snapshot,
         'X' => :market_data_incremental_refresh,
         'j' => :business_message_reject
-      }
+      }.freeze
 
       #
       # Returns the message class associated to a message code
-      # 
+      #
       # @param msg_type [Integer] The FIX message type code
       # @return [Class] The FIX message class
       #
       def self.get(msg_type)
-        Messages.const_get(camelcase(MAPPING[msg_type])) if MAPPING.has_key?(msg_type)
+        Messages.const_get(camelcase(MAPPING[msg_type])) if MAPPING.key?(msg_type)
       end
 
       #
@@ -40,7 +38,7 @@ module Fix
       # @return [Integer] The FIX message type code
       #
       def self.reverse_get(klass)
-        key = klass.name.split('::').last.gsub(/([a-z\d])([A-Z])/,'\1_\2').downcase.to_sym
+        key = klass.name.split('::').last.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase.to_sym
         MAPPING.find { |p| p[1] == key }[0]
       end
 
@@ -60,7 +58,6 @@ module Fix
       MAPPING.values.each do |klass|
         Messages.autoload(camelcase(klass), "fix/protocol/messages/#{klass}")
       end
-
     end
   end
 end

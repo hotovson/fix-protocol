@@ -3,13 +3,11 @@ require 'fix/protocol/message_part'
 
 module Fix
   module Protocol
-
     #
     # Represents a portion of a FIX message consisting of a similar repeating structure
     # preceded by a counter element
     #
     class RepeatingMessagePart < MessagePart
-
       extend Forwardable
       def_delegators :nodes, :[], :first, :last, :length, :size, :each, :empty?
 
@@ -29,9 +27,7 @@ module Fix
       def build
         nodes << element_klass.new
 
-        if block_given?
-          yield(nodes.last)
-        end
+        yield(nodes.last) if block_given?
 
         nodes.last
       end
@@ -59,14 +55,14 @@ module Fix
       # Parses an arbitrary number of nodes according to the found counter tag
       #
       def parse(str)
-        if str.match(/^#{counter_tag}\=([^\x01]+)\x01/)
-          len = $1.to_i 
+        m = str.match(/^#{counter_tag}\=([^\x01]+)\x01/).to_a
+        if m.any?
+          len = m[1].to_i
           @nodes = []
           len.times { @nodes << element_klass.new }
           super(str.gsub(/^#{counter_tag}\=[^\x01]+\x01/, ''))
         end
       end
-
     end
   end
 end

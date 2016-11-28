@@ -1,18 +1,15 @@
 module Fix
   module Protocol
-
     #
     # Represents a collection of unordered fields
     #
     class UnorderedPart < MessagePart
-
       #
       # Parses a full or partial FIX message string into the message part nodes
       #
       # @return [String] The string part that wasn't consumed during the parsing
       #
       def parse(str)
-
         left_to_parse     = str
         left_before_pass  = nil
 
@@ -30,7 +27,6 @@ module Fix
 
         left_to_parse
       end
-
     end
   end
 end

@@ -3,12 +3,10 @@ require 'fix/protocol/field'
 
 module Fix
   module Protocol
-
     #
     # Basic building block for messages. Message parts can define fields, sub-parts and collections
     #
     class MessagePart
-
       extend Forwardable
 
       attr_accessor :parse_failure, :name, :delegations
@@ -107,9 +105,11 @@ module Fix
       end
 
       #
-      # Defines a collection as a part of this message part, collections typically have a counter and a repeating element
+      # Defines a collection as a part of this message part,
+      # collections typically have a counter and a repeating element
       #
-      # @param name [String] The collection name, this will be the name of a dynamically created accessor on the message part
+      # @param name [String] The collection name, this will be the name of a dynamically created accessor
+      # on the message part
       # @param opts [Hash] The required options are +:counter_tag+ and +:klass+
       #
       def self.collection(name, opts = {})
@@ -136,10 +136,10 @@ module Fix
         if block_given?
           names = (to_s + name.to_s.split(/\_/).map(&:capitalize).join).split('::')
           klass = names.pop
-          parent_klass = (options[:node_type] == :part) ? MessagePart : UnorderedPart
-          klass = names.inject(Object) { |mem, obj| mem = mem.const_get(obj) }.const_set(klass, Class.new(parent_klass))
+          parent_klass = options[:node_type] == :part ? MessagePart : UnorderedPart
+          klass = names.inject(Object) { |a, e| a.const_get(e) }.const_set(klass, Class.new(parent_klass))
           klass.instance_eval(&block)
-          options.merge!({ klass: klass })
+          options[:klass] = klass
         elsif options[:klass]
           parent_delegate(name)
         end
@@ -165,13 +165,14 @@ module Fix
       # @param opts [Hash] Options hash
       #
       def self.unordered(name, opts = {}, &block)
-        part(name, opts.merge({ node_type: :unordered }), &block)
+        part(name, opts.merge(node_type: :unordered), &block)
       end
 
       #
       # Defines a field as part of the structure for this class
       #
-      # @param name [String] The field name, this will be the base name of a set of methods created on the class instances
+      # @param name [String] The field name, this will be the base name of a set of methods created
+      # on the class instances
       # @param opts [Hash] Options hash
       #
       def self.field(name, opts)
@@ -198,7 +199,7 @@ module Fix
         end
 
         # Delegate getter and setter from parent node
-        parent_delegate(name, "#{name}=") 
+        parent_delegate(name, "#{name}=")
       end
 
       #
@@ -212,14 +213,12 @@ module Fix
 
       #
       # Returns the errors for this instance
-      # 
-      # @return [Array] The errors for this instance
+      #
+      # @return Array The errors for this instance
       #
       def errors
         [nodes.map(&:errors), nodes.map(&:parse_failure)].flatten.compact
       end
-
     end
   end
 end
-

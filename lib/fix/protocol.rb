@@ -7,17 +7,16 @@ require 'fix/protocol/parse_failure'
 # Main Fix namespace
 #
 module Fix
-
   #
   # Main protocol namespace
   #
   module Protocol
-
     #
     # Parses a string into a Fix::Protocol::Message instance
     #
     # @param str [String] A FIX message string
-    # @return [Fix::Protocol::Message] A +Fix::Protocol::Message+ instance, or a +Fix::Protocol::ParseFailure+ in case of failure
+    # @return [Fix::Protocol::Message] A +Fix::Protocol::Message+ instance, or a +Fix::Protocol::ParseFailure+
+    # in case of failure
     #
     def self.parse(str)
       errors    = []
@@ -41,7 +40,7 @@ module Fix
 
         # Check checksum
         checksum = str.match(/10\=([^\x01]+)\x01/)[1]
-        expected = ('%03d' % (str.gsub(/10\=[^\x01]+\x01/, '').bytes.inject(&:+) % 256))
+        expected = format('%03d', str.gsub(/10\=[^\x01]+\x01/, '').bytes.inject(&:+) % 256)
         if checksum != expected
           errors << "Incorrect checksum, expected <#{expected}>, got <#{checksum}>"
         end
@@ -66,9 +65,7 @@ module Fix
     def self.alias_namespace!
       Object.const_set(:FP, Protocol) unless Object.const_defined?(:FP)
     end
-
   end
 end
 
 Fix::Protocol.alias_namespace!
-

@@ -90,4 +90,3 @@ describe Fix::Protocol::Message do
 
   end
 end
-
