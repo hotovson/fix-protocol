@@ -23,24 +23,27 @@ module Fix
     # @return [Fix::Protocol::Message] A +Fix::Protocol::Message+ instance, or a +Fix::Protocol::ParseFailure+
     # in case of failure
     #
-    def self.parse(str)
-      errors    = []
-      msg_type  = str.match(/^8\=[^\x01]+\x019\=[^\x01]+\x0135\=([^\x01]+)\x01/)
+    MSG_REGEX = /(^8\=[^\x01]+\x019\=([^\x01]+)\x01(35\=([^\x01]+)\x01.+))10\=([^\x01]+)\x01$/
+    # m[1] msg without checksum
+    # m[2] msg length as string
+    # m[3] msg body
+    # m[4] msg type
+    # m[5] msh checksum
 
-      if str.match(/^8\=[^\x01]+\x019\=[^\x01]+\x0135\=[^\x01]+\x01.+10\=[^\x01]+\x01/)
-        klass = MessageClassMapping.get(msg_type[1])
-        errors << "Unknown message type <#{msg_type[1]}>" unless klass
+    def self.parse(str)
+      errors = []
+      m = str.match(MSG_REGEX).to_a
+
+      if m.any?
+        klass = MessageClassMapping.get(m[4])
+        errors << "Unknown message type <#{m[4]}>" unless klass
 
         # Check message length
-        length = str.gsub(/10\=[^\x01]+\x01$/, '').gsub(/^8\=[^\x01]+\x019\=([^\x01]+)\x01/, '').length
-        errors << 'Incorrect body length' if length != $1.to_i
+        errors << 'Incorrect body length' if m[3].length != m[2].to_i
 
         # Check checksum
-        checksum = str.match(/10\=([^\x01]+)\x01/)[1]
-        expected = format('%03d', str.gsub(/10\=[^\x01]+\x01/, '').bytes.inject(&:+) % 256)
-        if checksum != expected
-          errors << "Incorrect checksum, expected <#{expected}>, got <#{checksum}>"
-        end
+        expected = format('%03d', m[1].bytes.inject(&:+) % 256)
+        errors << "Incorrect checksum, expected <#{expected}>, got <#{m[5]}>" if m[5] != expected
 
         if errors.empty?
           msg = klass.parse(str)
