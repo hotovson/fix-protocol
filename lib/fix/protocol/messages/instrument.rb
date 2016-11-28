@@ -1,12 +1,10 @@
 module Fix
   module Protocol
     module Messages
-
       #
       # An Instrument component, see http://www.onixs.biz/fix-dictionary/4.4/compBlock_Instrument.html
       #
       class Instrument < UnorderedPart
-
         #
         # The security ID source codes
         #
@@ -30,7 +28,7 @@ module Fix
           'H' => :clearing,
           'I' => :isda_fpml,
           'J' => :options_price_reporting_authority
-        }
+        }.freeze
 
         #
         # The product codes
@@ -49,7 +47,7 @@ module Fix
           11 => :municipal,
           12 => :other,
           13 => :financing
-        }
+        }.freeze
 
         field :symbol,              tag: 55
         field :security_id,         tag: 48
@@ -73,13 +71,12 @@ module Fix
         def errors
           e = []
 
-          if !!security_id ^ !!security_id_source
-            e << "Security ID, and security source must either be both blank, or both must be provided"
+          if security_id.nil? ^ security_id_source.nil?
+            e << 'Security ID, and security source must either be both blank, or both must be provided'
           end
 
           [super, e].flatten
         end
-
       end
     end
   end
