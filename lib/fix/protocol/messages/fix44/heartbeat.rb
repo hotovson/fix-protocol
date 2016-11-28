@@ -7,6 +7,7 @@ module Fix
       class Heartbeat < ::Fix::Protocol::Message
         field :test_req_id, tag: 112
       end
+
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'fix/protocol/messages/md_entry'
+require 'fix/protocol/messages/fix44/md_entry'
 
 module Fix
   module Protocol

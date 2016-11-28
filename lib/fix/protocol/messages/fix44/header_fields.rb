@@ -13,6 +13,7 @@ module Fix
         field :target_comp_id,  tag: 56,    required: true
         field :msg_seq_num,     tag: 34,    required: true, type: :integer
         field :sending_time,    tag: 52,    required: true, type: :timestamp, default: proc { Time.now.utc }
+        field :app_ver_id,      tag: 1128
       end
     end
   end
