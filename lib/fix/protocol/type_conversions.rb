@@ -1,3 +1,5 @@
+require 'bigdecimal'
+
 module Fix
   module Protocol
     #
@@ -13,7 +15,7 @@ module Fix
       TIMESTAMP_REGEX = /\A([0-9]{4})([0-9]{2})([0-9]{2})-([0-9]{2}):([0-9]{2}):([0-9]{2})(.[0-9]{3})?\Z/
       def parse_timestamp(str)
         m = str.match(TIMESTAMP_REGEX).to_a.map(&:to_i)
-        Time.new(m[1], m[2], m[3], m[4], m[5], m[6], 0).utc if m.any?
+        Time.utc(m[1], m[2], m[3], m[4], m[5], m[6], 0) if m.any?
       end
 
       #
@@ -29,7 +31,7 @@ module Fix
       LOCAL_MARKET_DATE_REGEX = /\A([0-9]{4})([0-9]{2})([0-9]{2})\Z/
       def parse_local_market_date(str)
         m = str.match(LOCAL_MARKET_DATE_REGEX).to_a.map(&:to_i)
-        Time.new(m[1], m[2], m[3], 0, 0, 0, 0).utc if m.any?
+        Time.utc(m[1], m[2], m[3]) if m.any?
       end
 
       def dump_local_market_date(dt)
@@ -77,11 +79,11 @@ module Fix
       end
 
       def parse_price(str)
-        str && str.to_d
+        str && BigDecimal.new(str)
       end
 
       def dump_price(price)
-        price.to_s
+        price.to_f.to_s
       end
 
       def parse_qty(str)
