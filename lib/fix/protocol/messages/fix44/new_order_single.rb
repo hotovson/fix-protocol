@@ -38,18 +38,6 @@ module Fix
           field :min_qty,       tag: 110, required: true, type: :qty
           field :security_type, tag: 167, required: true
           field :product,       tag: 460, required: true, type: :integer
-
-          # collection :md_entry_types, counter_tag: 267, klass: FP::Messages::MdEntryType
-          # collection :instruments,    counter_tag: 146, klass: FP::Messages::Instrument
-        end
-
-        def errors
-          errs = []
-
-          # errs << 'MdEntryTypes can not be empty' if md_entry_types.empty?
-          # errs << 'Instruments can not be empty'  if instruments.empty?
-
-          [super, errs].flatten
         end
       end
     end

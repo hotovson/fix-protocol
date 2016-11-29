@@ -98,18 +98,6 @@ module Fix
           field :maturity_date, tag: 541, type: :local_martket_date
 
           collection :no_legs, counter_tag: 555, klass: FP::Messages::NoLeg
-
-          # collection :md_entry_types, counter_tag: 267, klass: FP::Messages::MdEntryType
-          # collection :instruments,    counter_tag: 146, klass: FP::Messages::Instrument
-        end
-
-        def errors
-          errs = []
-
-          # errs << 'MdEntryTypes can not be empty' if md_entry_types.empty?
-          # errs << 'Instruments can not be empty'  if instruments.empty?
-
-          [super, errs].flatten
         end
       end
     end
