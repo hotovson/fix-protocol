@@ -13,6 +13,7 @@ module Fix
         '3' => :reject,
         '4' => :sequence_reset,
         '5' => :logout,
+        'D' => :new_order_single,
         'V' => :market_data_request,
         'W' => :market_data_snapshot,
         'X' => :market_data_incremental_refresh,
