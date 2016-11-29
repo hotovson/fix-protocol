@@ -1,9 +1,10 @@
 require_relative '../../spec_helper'
 
 describe Fix::Protocol::Message do
-
   before do
-    @heartbeat = "8=FIX.4.1\u00019=73\u000135=0\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112=19980604-07:58:28\u000110=235\u0001"
+    @heartbeat = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+      8=FIX.4.1|9=73|35=0|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112=19980604-07:58:28|10=235|
+    MSG
   end
 
   describe '#msg_seq_num' do
@@ -18,56 +19,73 @@ describe Fix::Protocol::Message do
 
   describe '.parse' do
     it 'should return a failure when failing to parse a message' do
-      msg = "8=FOO.4.2\u00019=73\u000135=XyZ\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112=19980604-07:58:28\u000110=235\u0001"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FOO.4.2|9=73|35=XyZ|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112=19980604-07:58:28|10=235|
+      MSG
       failure = Fix::Protocol.parse(msg)
       expect(failure).to be_a_kind_of(Fix::Protocol::ParseFailure)
     end
 
     it 'should return a failure when the version is not expected' do
-      msg = "8=FOO.4.2\u00019=73\u000135=0\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112=19980604-07:58:28\u000110=233\u0001"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FOO.4.2|9=73|35=0|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112=19980604-07:58:28|10=233|
+      MSG
       failure = Fix::Protocol.parse(msg)
       expect(failure).to be_a_kind_of(Fix::Protocol::ParseFailure)
-      expect(failure.errors).to include("Unsupported version: <FOO.4.2>, expected <FIX.4.4>")
+      expect(failure.errors).to include('Unsupported version: <FOO.4.2>, expected <FIX.4.4>')
     end
 
     it 'should not return a failure when the version is expected' do
       FP::Message.version = 'FOO.4.2'
-      msg = "8=FOO.4.2\u00019=73\u000135=0\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112=19980604-07:58:28\u000110=233\u0001"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FOO.4.2|9=73|35=0|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112=19980604-07:58:28|10=233|
+      MSG
       failure = Fix::Protocol.parse(msg)
       expect(failure).to be_a_kind_of(Fix::Protocol::Message)
       FP::Message.version = 'FIX.4.4'
     end
 
     it 'should return a failure when the message type is incorrect' do
-      msg = "8=FOO.4.2\u00019=73\u000135=ZOULOU\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112=19980604-07:58:28\u000110=235\u0001"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FOO.4.2|9=73|35=ZOULOU|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112=19980604-07:58:28|10=235|
+      MSG
       failure = Fix::Protocol.parse(msg)
       expect(failure).to be_a_kind_of(Fix::Protocol::ParseFailure)
-      expect(failure.errors).to include("Unknown message type <ZOULOU>")
+      expect(failure.errors).to include('Unknown message type <ZOULOU>')
     end
 
     it 'should return a failure when the checksum is incorrect' do
-      msg = "8=FOO.4.2\u00019=73\u000135=0\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112=19980604-07:58:28\u000110=235\u0001"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FOO.4.2|9=73|35=0|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112=19980604-07:58:28|10=235|
+      MSG
       failure = Fix::Protocol.parse(msg)
       expect(failure).to be_a_kind_of(Fix::Protocol::ParseFailure)
-      expect(failure.errors).to include("Incorrect checksum, expected <233>, got <235>")
+      expect(failure.errors).to include('Incorrect checksum, expected <233>, got <235>')
     end
 
     it 'should return a failure when the body length is incorrect' do
-      msg = "8=FOO.4.2\u00019=73\u000135=0\u000149=BRKR\u000156=INVMGR\u000134=235\u000152=19980604-07:58:28\u0001112= <additionnal length> 19980604-07:58:28\u000110=235\u0001"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FOO.4.2|9=73|35=0|49=BRKR|56=INVMGR|34=235|52=19980604-07:58:28|112= <additionnal length> 19980604-07:58:28|10=235|
+      MSG
       failure = Fix::Protocol.parse(msg)
       expect(failure).to be_a_kind_of(Fix::Protocol::ParseFailure)
-      expect(failure.errors).to include("Incorrect body length")
+      expect(failure.errors).to include('Incorrect body length, expected <92>, got <73>')
     end
 
     it 'should parse a message to its correct class' do
-      msg = "8=FIX.4.4\x019=74\x0135=0\x0149=AAAA\x0156=BBB\x0134=2\x0152=20080420-15:16:13\x01112=L.0001.0002.0003.151613\x0110=034\x01"
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FIX.4.4|9=74|35=0|49=AAAA|56=BBB|34=2|52=20080420-15:16:13|112=L.0001.0002.0003.151613|10=034|
+      MSG
       expect(Fix::Protocol.parse(msg)).to be_a_kind_of(Fix::Protocol::Messages::Heartbeat)
     end
   end
 
   context 'when a message has been parsed' do
     before do
-      @parsed = FP.parse("8=FIX.4.4\x019=74\x0135=0\x0149=AAAA\x0156=BBB\x0134=2\x0152=20080420-15:16:13\x01112=L.0001.0002.0003.151613\x0110=034\x01")
+      msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
+        8=FIX.4.4|9=74|35=0|49=AAAA|56=BBB|34=2|52=20080420-15:16:13|112=L.0001.0002.0003.151613|10=034|
+      MSG
+      @parsed = FP.parse(msg)
     end
 
     describe '#sender_comp_id' do
@@ -87,6 +105,5 @@ describe Fix::Protocol::Message do
         expect(FP::Messages::Heartbeat.new.header.version).to eql('FIX.4.4')
       end
     end
-
   end
 end
