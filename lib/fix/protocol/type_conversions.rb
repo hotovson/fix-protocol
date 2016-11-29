@@ -13,7 +13,7 @@ module Fix
       TIMESTAMP_REGEX = /\A([0-9]{4})([0-9]{2})([0-9]{2})-([0-9]{2}):([0-9]{2}):([0-9]{2})(.[0-9]{3})?\Z/
       def parse_timestamp(str)
         m = str.match(TIMESTAMP_REGEX).to_a.map(&:to_i)
-        Time.new(m[1], m[2], m[3], m[4], m[5], m[6], 0) if m.any?
+        Time.new(m[1], m[2], m[3], m[4], m[5], m[6], 0).utc if m.any?
       end
 
       #
@@ -24,6 +24,16 @@ module Fix
       #
       def dump_timestamp(dt)
         dt.utc.strftime('%Y%m%d-%H:%M:%S')
+      end
+
+      LOCAL_MARKET_DATE_REGEX = /\A([0-9]{4})([0-9]{2})([0-9]{2})\Z/
+      def parse_local_market_date(str)
+        m = str.match(LOCAL_MARKET_DATE_REGEX).to_a.map(&:to_i)
+        Time.new(m[1], m[2], m[3], 0, 0, 0, 0).utc if m.any?
+      end
+
+      def dump_local_market_date(dt)
+        dt.utc.strftime('%Y%m%d')
       end
 
       #
@@ -64,6 +74,22 @@ module Fix
       #
       def parse_yn_bool(str)
         str == 'Y'
+      end
+
+      def parse_price(str)
+        str && str.to_d
+      end
+
+      def dump_price(price)
+        price.to_s
+      end
+
+      def parse_qty(str)
+        str && str.to_i
+      end
+
+      def dump_qty(qty)
+        qty.to_s
       end
     end
   end
