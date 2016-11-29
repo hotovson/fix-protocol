@@ -39,7 +39,7 @@ module Fix
         errors << "Unknown message type <#{m[4]}>" unless klass
 
         # Check message length
-        errors << 'Incorrect body length' if m[3].length != m[2].to_i
+        errors << "Incorrect body length, expected <#{m[3].length}>, got <#{m[2].to_i}>" if m[3].length != m[2].to_i
 
         # Check checksum
         expected = format('%03d', m[1].bytes.inject(&:+) % 256)
