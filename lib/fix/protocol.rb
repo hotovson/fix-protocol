@@ -82,7 +82,7 @@ module Fix
     # Sets up the autoloading mechanism according to the relevant FIX version
     #
     def self.setup_autoload!
-      ver = @fix_protocol_version || DEFAULT_FIX_PROTOCOL_VERSION
+      ver = defined?(FIX_PROTOCOL_VERSION) ? FIX_PROTOCOL_VERSION : DEFAULT_FIX_PROTOCOL_VERSION
       folder = File.join(File.dirname(__FILE__), "protocol/messages/#{ver.delete('.').downcase}")
 
       Dir["#{folder}/*.rb"].each do |file|

@@ -9,4 +9,3 @@ describe Fix::Protocol::Field do
   describe '#parse' do
   end
 end
-
