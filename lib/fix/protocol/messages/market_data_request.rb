@@ -1,3 +1,6 @@
+require 'fix/protocol/messages/md_entry_type'
+require 'fix/protocol/messages/instrument'
+
 module Fix
   module Protocol
     module Messages

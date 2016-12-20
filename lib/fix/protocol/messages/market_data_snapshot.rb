@@ -1,5 +1,5 @@
-require 'fix/protocol/messages/fix44/instrument'
-require 'fix/protocol/messages/fix44/md_entry'
+require 'fix/protocol/messages/instrument'
+require 'fix/protocol/messages/md_entry'
 
 module Fix
   module Protocol

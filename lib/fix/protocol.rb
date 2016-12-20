@@ -1,28 +1,11 @@
+require 'fix/protocol/fix44' unless defined?(::Fix::Protocol::FIX_PROTOCOL_VERSION)
 require 'fix/protocol/version'
-require 'fix/protocol/messages'
+require 'fix/protocol/message'
 require 'fix/protocol/message_class_mapping'
 require 'fix/protocol/parse_failure'
 
-#
-# Main Fix namespace
-#
 module Fix
-  #
-  # Main protocol namespace
-  #
   module Protocol
-    #
-    # The default version of the protocol to use
-    #
-    DEFAULT_FIX_PROTOCOL_VERSION = 'FIX.4.4'.freeze
-
-    #
-    # Parses a string into a Fix::Protocol::Message instance
-    #
-    # @param str [String] A FIX message string
-    # @return [Fix::Protocol::Message] A +Fix::Protocol::Message+ instance, or a +Fix::Protocol::ParseFailure+
-    # in case of failure
-    #
     MSG_REGEX = /(^8\=[^\x01]+\x019\=([^\x01]+)\x01(35\=([^\x01]+)\x01.+))10\=([^\x01]+)\x01$/
     # m[1] msg without checksum
     # m[2] msg length as string
@@ -61,39 +44,17 @@ module Fix
       end
     end
 
-    #
-    # Alias the +Fix::Protocol+ namespace to +FP+ if possible
-    #
     def self.alias_namespace!
       Object.const_set(:FP, Protocol) unless Object.const_defined?(:FP)
     end
 
-    #
-    # Formats a symbol as a proper class name
-    #
-    # @param s [Symbol] A name to camelcase
-    # @return [Symbol] A camelcased class name
-    #
     def self.camelcase(s)
       s.to_s.split(' ').map { |str| str.split('_') }.flatten.map(&:capitalize).join.to_sym
-    end
-
-    #
-    # Sets up the autoloading mechanism according to the relevant FIX version
-    #
-    def self.setup_autoload!
-      ver = defined?(FIX_PROTOCOL_VERSION) ? FIX_PROTOCOL_VERSION : DEFAULT_FIX_PROTOCOL_VERSION
-      folder = File.join(File.dirname(__FILE__), "protocol/messages/#{ver.delete('.').downcase}")
-
-      Dir["#{folder}/*.rb"].each do |file|
-        klass = camelcase(file.match(%r{([^\/]+)\.rb$})[1])
-        Messages.autoload(klass, file)
-      end
     end
   end
 end
 
 Fix::Protocol.alias_namespace!
-Fix::Protocol.setup_autoload!
 
-require 'fix/protocol/message'
+Dir[File.join(__dir__, 'protocol', 'messages', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'protocol', 'messages', Fix::Protocol::FIX_PROTOCOL_VERSION.to_s, '*rb')].each { |file| require file }

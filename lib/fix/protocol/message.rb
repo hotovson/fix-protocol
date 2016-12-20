@@ -1,6 +1,7 @@
 require 'fix/protocol/message_part'
 require 'fix/protocol/unordered_part'
 require 'fix/protocol/repeating_message_part'
+require 'fix/protocol/messages/header_fields'
 
 module Fix
   module Protocol
@@ -9,8 +10,7 @@ module Fix
     #
     class Message < MessagePart
       # Default version for when we do not specify anything
-      DEFAULT_VERSION = 'FIX.4.4'.freeze
-      @@expected_version = DEFAULT_VERSION
+      @@expected_version = ::Fix::Protocol::BEGIN_STRING
 
       #
       # Allows the version tag to be overridden at runtime

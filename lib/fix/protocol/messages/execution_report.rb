@@ -1,3 +1,5 @@
+require 'fix/protocol/messages/no_leg'
+
 module Fix
   module Protocol
     module Messages
