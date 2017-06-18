@@ -48,6 +48,14 @@ module Fix
         end
       end
 
+      def to_sym
+        MessageClassMapping::MAPPING[msg_type]
+      end
+
+      def to_s
+        dump.gsub(/\x01/, '|')
+      end
+
       #
       # Whether this instance is ready to be dumped as a valid FIX message
       #

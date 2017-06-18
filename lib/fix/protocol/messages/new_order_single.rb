@@ -34,7 +34,7 @@ module Fix
           field :side,          tag: 54, required: true
           field :symbol,        tag: 55, required: true
           field :time_in_force, tag: 59, required: true, mapping: TIME_IN_FORCE_TYPES
-          field :transact_time, tag: 60, required: true, type: :timestamp
+          field :transact_time, tag: 60, required: true, type: :timestamp, default: proc { Time.now.utc }
           field :min_qty,       tag: 110, required: true, type: :qty
           field :security_type, tag: 167, required: true
           field :product,       tag: 460, required: true, type: :integer

@@ -62,7 +62,7 @@ module Fix
 
         unordered :body do
           field :sender_sub_id, tag: 50
-          field :on_behalf_of_comp_id, tag: 115, required: true
+          field :on_behalf_of_comp_id, tag: 115 #, required: true
           field :avg_px,        tag: 6, required: true, type: :price
           field :cl_ord_id,     tag: 11, required: true
           field :cum_qty,       tag: 14, required: true, type: :qty
@@ -76,7 +76,7 @@ module Fix
           field :ord_status,    tag: 39, required: true, mapping: ORDER_STATUS_TYPES
           field :ord_type,      tag: 40, required: true, mapping: ORDER_TYPE_TYPES
           field :orig_cl_ord_id, tag: 41
-          field :price,         tag: 44, required: true, type: :price
+          field :price,         tag: 44, type: :price #, required: true
           field :side,          tag: 54, required: true
           field :symbol,        tag: 55, required: true
           field :text,          tag: 58

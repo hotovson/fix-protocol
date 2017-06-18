@@ -11,6 +11,10 @@ module Fix
         @errors   = [errs].flatten.compact
         @message  = msg
       end
+
+      def valid?
+        false
+      end
     end
   end
 end
