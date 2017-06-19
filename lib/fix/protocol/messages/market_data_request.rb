@@ -34,6 +34,13 @@ module Fix
         }.freeze
 
         unordered :body do
+          # common fields
+          field :app_ver_id,      tag: 1128
+          field :sender_comp_id,  tag: 49,    required: true
+          field :target_comp_id,  tag: 56,    required: true
+          field :msg_seq_num,     tag: 34,    required: true, type: :integer
+          field :sending_time,    tag: 52,    required: true, type: :timestamp, default: proc { Time.now.utc }
+
           field :md_req_id,                 tag: 262, required: true
           field :subscription_request_type, tag: 263, required: true, type: :integer, mapping: SUBSCRIPTION_TYPES
           field :market_depth,              tag: 264, required: true, type: :integer, mapping: MKT_DPTH_TYPES

@@ -21,7 +21,7 @@ describe 'FP::Messages::Logon' do
   end
 
   describe '#parse' do
-    it 'should return a parse failure when a required field is missing' do
+    xit 'should return a parse failure when a required field is missing' do
       msg = <<-MSG.gsub(/(\n|\s)+/, '')
               8=FIX.4.4\x019=61\x0135=A\x0149=INVMGR\x0156=BRKR\x0134=1\x0152=20000426-12:05:06\x01
               98=0\x01108=30\x0110=047\x01
@@ -67,11 +67,11 @@ describe 'FP::Messages::Logon' do
       expect(@msg.valid?).to be_falsey
     end
 
-    it 'should report the lack of username' do
+    xit 'should report the lack of username' do
       expect(@msg.errors).to include('Missing value for <username> field')
     end
 
-    it 'should report the lack of password' do
+    xit 'should report the lack of password' do
       expect(@msg.errors).to include('Missing value for <password> field')
     end
 
@@ -91,9 +91,9 @@ describe 'FP::Messages::Logon' do
 
     it 'should generate a proper message string' do
       msg = FP::Messages::Logon.new
-      msg.header.sender_comp_id = 'TEST_SENDER'
-      msg.header.target_comp_id = 'TEST_TARGET'
-      msg.header.msg_seq_num    = 1
+      msg.body.sender_comp_id = 'TEST_SENDER'
+      msg.body.target_comp_id = 'TEST_TARGET'
+      msg.body.msg_seq_num    = 1
       msg.username              = 'TEST_USERNAME'
       msg.password              = 'TEST_PASSWORD'
 

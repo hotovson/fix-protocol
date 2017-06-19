@@ -8,7 +8,8 @@ describe 'Fix::Protocol::Messages::Heartbeat' do
   describe '#test_req_id' do
     it 'should return the correct value' do
       h = Fix::Protocol.parse(@msg)
-      expect(h.test_req_id).to eql('L.0001.0002.0003.151613')
+      puts h.errors
+      expect(h.body.test_req_id).to eql('L.0001.0002.0003.151613')
     end
   end
 
@@ -16,7 +17,7 @@ describe 'Fix::Protocol::Messages::Heartbeat' do
     it 'should set a body field' do
       h = FP::Messages::Heartbeat.new
       h.test_req_id = 'foo'
-      expect(h.nodes[1].value).to eql('foo')
+      expect(h.body.nodes.last.value).to eql('foo')
     end
   end
 

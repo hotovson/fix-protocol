@@ -8,7 +8,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 
 SimpleCov.start
 
-# preload default protocol version
+# preload default protocol version FIX4.4
 require 'fix/protocol'
 
 RSpec.configure do |config|
