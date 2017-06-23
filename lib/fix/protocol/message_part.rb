@@ -34,6 +34,10 @@ module Fix
         nodes.map(&:dump).join
       end
 
+      def to_h
+        nodes.inject({}) {|result, node| result.merge!(node.to_h)}
+      end
+
       #
       # Parses a full or partial FIX message string into the message part nodes
       #

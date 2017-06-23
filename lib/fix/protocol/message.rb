@@ -56,6 +56,10 @@ module Fix
         dump.gsub(/\x01/, '|')
       end
 
+      def [](key)
+        to_h[key]
+      end
+
       #
       # Whether this instance is ready to be dumped as a valid FIX message
       #

@@ -28,6 +28,10 @@ module Fix
         @value && "#{tag}=#{@value}\x01"
       end
 
+      def to_h
+        {name => value}
+      end
+
       #
       # Checks whether the start of the given string can be parsed as this particular field
       #
