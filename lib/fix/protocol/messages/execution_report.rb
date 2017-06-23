@@ -89,11 +89,11 @@ module Fix
           field :text,          tag: 58
           field :time_in_force, tag: 59, required: true, mapping: TIME_IN_FORCE_TYPES
           field :transact_time, tag: 60, required: true, type: :timestamp
-          field :fut_sett_date, tag: 64, type: :local_martket_date
-          field :trade_date,    tag: 75, type: :local_martket_date
+          field :fut_sett_date, tag: 64, type: :local_market_date
+          field :trade_date,    tag: 75, type: :local_market_date
           field :ord_rej_reason, tag: 103, type: :integer, mapping: ORD_REJ_REASON_TYPES
           field :min_qty,       tag: 110, type: :qty
-          field :settl_curr_amt, tag: 119
+          field :settl_curr_amt, tag: 119, type: :amt
           field :settl_currency, tag: 120
           field :expire_time,   tag: 126, type: :timestamp
           field :exec_type,     tag: 150, required: true
@@ -104,7 +104,7 @@ module Fix
           field :last_spot_rate, tag: 194, type: :price
           field :last_forward_points, tag: 195, type: :price
           field :product,       tag: 460, required: true, type: :integer
-          field :maturity_date, tag: 541, type: :local_martket_date
+          field :maturity_date, tag: 541, type: :local_market_date
 
           collection :no_legs, counter_tag: 555, klass: FP::Messages::NoLeg
         end

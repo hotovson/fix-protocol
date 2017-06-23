@@ -93,6 +93,14 @@ module Fix
       def dump_qty(qty)
         qty.to_s
       end
+
+      def parse_amt(str)
+        str && BigDecimal.new(str)
+      end
+
+      def dump_amt(amt)
+        amt.to_s
+      end
     end
   end
 end
