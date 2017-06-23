@@ -87,7 +87,7 @@ module Fix
       end
 
       def parse_qty(str)
-        str && str.to_i
+        str && BigDecimal.new(str)
       end
 
       def dump_qty(qty)
