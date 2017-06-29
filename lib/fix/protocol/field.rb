@@ -39,7 +39,7 @@ module Fix
       # @return [Boolean] Whether the beginning of the string can be parsed for this field
       #
       def can_parse?(str)
-        str.match(/^#{tag}\=[^\x01]+\x01/)
+        str.match(/^#{tag}\=[^\x01]*\x01/)
       end
 
       #
@@ -50,7 +50,7 @@ module Fix
       # @return [String] The same string with the field stripped off
       #
       def parse(str)
-        m = str.match(/^#{tag}\=([^\x01]+)\x01/).to_a
+        m = str.match(/^#{tag}\=([^\x01]*)\x01/).to_a
         if m.any?
           @value = m[1]
           str.gsub(/^[^\x01]+\x01/, '')
