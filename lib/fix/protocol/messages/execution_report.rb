@@ -75,7 +75,7 @@ module Fix
           field :cum_qty,       tag: 14, required: true, type: :qty
           field :currency,      tag: 15, required: true
           field :exec_id,       tag: 17, required: true
-          field :exec_inst,     tag: 18, required: true, mapping: EXEC_INST_TYPES
+          field :exec_inst,     tag: 18, mapping: EXEC_INST_TYPES
           field :last_px,       tag: 31, type: :price
           field :last_qty,      tag: 32, type: :qty
           field :order_id,      tag: 37, required: true
