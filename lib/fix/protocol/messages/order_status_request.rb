@@ -15,7 +15,7 @@ module Fix
           # defined in protocol, but server reject this
           # field :party_id,      tag: 448, required: true
           field :cl_ord_id,     tag: 11, required: true
-          field :order_id,      tag: 37, required: true
+          field :order_id,      tag: 37
         end
       end
     end
