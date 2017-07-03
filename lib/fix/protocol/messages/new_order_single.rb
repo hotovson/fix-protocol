@@ -32,6 +32,7 @@ module Fix
           field :sending_time,    tag: 52,    required: true, type: :timestamp, default: proc { Time.now.utc }
 
           field :sender_sub_id, tag: 50
+          field :deliver_to_comp_id, tag: 128
           field :cl_ord_id,     tag: 11, required: true
           field :currency,      tag: 15, required: true
           field :exec_inst,     tag: 18, required: true, mapping: EXEC_INST_TYPES
