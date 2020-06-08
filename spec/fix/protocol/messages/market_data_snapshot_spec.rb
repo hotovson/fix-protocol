@@ -17,7 +17,14 @@ describe Fix::Protocol::Messages::MarketDataSnapshot do
       msg = <<-MSG.gsub(/(\n|\s)+/, '').tr('|', "\x01")
           8=FIX.4.4|9=255|35=W|34=144|49=prod.fx|52=20200608-08:04:43.067|56=quote.ld.001|57=ld5|55=XAU/USD|262=3|460=4|541=20200610|268=2|269=0|270=1695.42|15=XAU|271=100|276=A|282=INTM|299=1082486_BID|290=1|269=1|270=1696.08|15=XAU|271=100|276=A|282=INTM|299=1082486_OFFER|290=1|10=216|
       MSG
-      expect(FP.parse(msg)).to be_an_instance_of(FP::Messages::MarketDataSnapshot)
+      snapshot = FP.parse(msg)
+      expect(snapshot).to be_an_instance_of(FP::Messages::MarketDataSnapshot)
+
+      expect(snapshot.md_entries.size).to eq 2
+      expect(snapshot.md_entries[0].md_entry_type).to eq :bid
+      expect(snapshot.md_entries[0].md_entry_px).to eq '1695.42'
+      expect(snapshot.md_entries[1].md_entry_type).to eq :ask
+      expect(snapshot.md_entries[1].md_entry_px).to eq '1696.08'
     end
 
     it 'parses a message without the 541 tag' do

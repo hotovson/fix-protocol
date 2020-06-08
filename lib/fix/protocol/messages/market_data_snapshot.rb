@@ -21,6 +21,7 @@ module Fix
           field :md_req_id,                 tag: 262, required: true
 
           part  :instrument, klass: FP::Messages::Instrument
+          field :maturity_date, tag: 541, type: :local_market_date
           collection :md_entries, counter_tag: 268, klass: FP::Messages::MdEntry
         end
       end
