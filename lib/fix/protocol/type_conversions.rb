@@ -79,7 +79,7 @@ module Fix
       end
 
       def parse_price(str)
-        str && BigDecimal.new(str)
+        str && BigDecimal(str)
       end
 
       def dump_price(price)
@@ -87,7 +87,7 @@ module Fix
       end
 
       def parse_qty(str)
-        str && BigDecimal.new(str)
+        str && BigDecimal(str)
       end
 
       def dump_qty(qty)
@@ -95,7 +95,7 @@ module Fix
       end
 
       def parse_amt(str)
-        str && BigDecimal.new(str)
+        str && BigDecimal(str)
       end
 
       def dump_amt(amt)
