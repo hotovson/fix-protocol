@@ -41,6 +41,7 @@ module Fix
           field :msg_seq_num,     tag: 34,    required: true, type: :integer
           field :sending_time,    tag: 52,    required: true, type: :timestamp, default: proc { Time.now.utc }
 
+          field :sender_sub_id,             tag: 50
           field :deliver_to_comp_id,        tag: 128
           field :md_req_id,                 tag: 262, required: true
           field :subscription_request_type, tag: 263, required: true, type: :integer, mapping: SUBSCRIPTION_TYPES
