@@ -15,7 +15,7 @@ describe 'Fix::Protocol::TypeConversions' do
     end
 
     it 'properly dumps' do
-      expect(test_class.dump_price(BigDecimal.new('123.45'))).to eq '123.45'
+      expect(test_class.dump_price(BigDecimal('123.45'))).to eq '123.45'
     end
   end
 
