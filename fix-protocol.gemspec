@@ -7,7 +7,7 @@ require 'fix/protocol/version'
 Gem::Specification.new do |s|
   s.name        = 'fix-protocol'
   # s.version     = Fix::Protocol::VERSION
-  s.version     = '1.2.1'
+  s.version     = '1.2.2'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['David François']
   s.email       = ['david.francois@paymium.com']
